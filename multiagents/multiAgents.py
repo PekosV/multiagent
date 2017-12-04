@@ -152,11 +152,10 @@ class MinimaxAgent(MultiAgentSearchAgent):
         """
             Returns the max value and action at a node.
         """
-        # Checking if the node can be evaluated.
+        # elegxw an o komvos mporei na ginei evaluate.
         if depth == 0 or gameState.isWin() or gameState.isLose():
             return self.evaluationFunction(gameState), 'Stop'
 
-        # agentIndex = 0
         actions = gameState.getLegalActions(agentIndex)
         successorGameStates = [gameState.generateSuccessor(agentIndex, action)
                                for action in actions]
@@ -175,7 +174,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
             Returns a min value and action at a node.
         """
 
-        # Checking if the node can be evaluated.
+        #elegxw an o komvos mporei na ginei evaluate.
         if depth == 0 or gameState.isWin() or gameState.isLose():
             return self.evaluationFunction(gameState), 'Stop'
 
@@ -210,13 +209,14 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         "*** YOUR CODE HERE ***"
         a = -999999
         b = 999999
-        return self.maxFunction(gameState, self.index, self.depth, a, b)[1]
-    def maxFunction(self, gameState, agentIndex, depth, a, b):
+        return self.MaxValue(gameState, self.index, self.depth, a, b)[1]
+
+    def MaxValue(self, gameState, agentIndex, depth, a, b):
         """
             Returns a max value and action at a node.
         """
 
-        # Checking if the node can be evaluated.
+        # elegxw an o komvos mporei na ginei evaluate.
         if depth == 0 or gameState.isWin() or gameState.isLose():
             return self.evaluationFunction(gameState), 'Stop'
 
@@ -224,14 +224,14 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         bestValue = -999999
         bestAction = 'Stop'
 
-        # agentIndex = 0
+
         actions = gameState.getLegalActions(agentIndex)
 
         for action in actions:
             successorGameState = gameState.generateSuccessor(agentIndex, action)
-            value = max(value, self.minFunction(successorGameState, agentIndex + 1, depth, a, b)[0])
+            value = max(value, self.MinValue(successorGameState, agentIndex + 1, depth, a, b)[0])
 
-            # Pruning condition.
+            # sun8ukh gia kladema.
             if value > b:
                 return value, action
             a = max(a, value)
@@ -242,7 +242,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
 
         return bestValue, bestAction
 
-    def minFunction(self, gameState, agentIndex, depth, a, b):
+    def MinValue(self, gameState, agentIndex, depth, a, b):
         """
             Returns a min value and action at a node.
         """
@@ -260,12 +260,12 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         for action in actions:
             successorGameState = gameState.generateSuccessor(agentIndex, action)
 
-            # an uparxei ki allo fantsma kalw thn min gia to epomeno
+            # an uparxei ki allo fantasma kalw thn min gia to epomeno
             # fantasma alliws kalw thn max gia ton pacman.
             if agentIndex < gameState.getNumAgents() - 1:
-                value = min(value, self.minFunction(successorGameState, agentIndex + 1, depth, a, b)[0])
+                value = min(value, self.MinValue(successorGameState, agentIndex + 1, depth, a, b)[0])
             else:
-                value = min(value, self.maxFunction(successorGameState, 0, depth - 1, a, b)[0])
+                value = min(value, self.MaxValue(successorGameState, 0, depth - 1, a, b)[0])
 
             # sun8hkh gia to kladema.
             if value < a:
@@ -298,11 +298,10 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
           Returns a max value and action at a node.
         """
 
-        # Checking if the node can be evaluated.
+        # elegxw an o komvos mporei na ginei evaluate..
         if depth == 0 or gameState.isWin() or gameState.isLose():
             return self.evaluationFunction(gameState), 'Stop'
 
-        # agentIndex = 0
         actions = gameState.getLegalActions(agentIndex)
         successorGameStates = [gameState.generateSuccessor(agentIndex, action)
                                for action in actions]
@@ -321,7 +320,7 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
           Returns the expected value and action at a node.
         """
 
-        # Checking if the node can be evaluated.
+        #elegxw an o komvos mporei na ginei evaluate.
         if depth == 0 or gameState.isWin() or gameState.isLose():
             return self.evaluationFunction(gameState), 'Stop'
 
@@ -329,8 +328,8 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
         successorGameStates = [gameState.generateSuccessor(agentIndex, action)
                                for action in actions]
 
-        # If there is another ghost, then call the expecti function for the
-        # next ghost, otherwise call the max function for pacman.
+        # An uparxei allo fantasma kalese thn Expect gia auto
+        # alliws kalese thn max gia ton pacman.
         if agentIndex < gameState.getNumAgents() - 1:
             scores = [self.Expect(successorGameState, agentIndex + 1, depth)[0]
                       for successorGameState in successorGameStates]
@@ -338,7 +337,7 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
             scores = [self.MaxValue(successorGameState, 0, depth - 1)[0]
                       for successorGameState in successorGameStates]
 
-        # Getting the expected value.
+        # Anamenomenh timi mesos oros.
         bestScore = sum(scores) / len(scores)
 
         return bestScore, 'Stop'
